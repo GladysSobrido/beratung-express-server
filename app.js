@@ -1,9 +1,20 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
+const connect = require("./lib/connect");
+const Tarif = require("./models/tarifs");
 
 app.get("/", (req, res) => res.type("html").send(html));
+
+app.get("/tarifs", async (req, res) => {
+  await connect();
+  const tarifs = await Tarif.find();
+  if (!tarifs.length) {
+    return res.json({ message: "Tarifs were not found" });
+  }
+  return res.json(tarifs);
+});
 
 const server = app.listen(port, () =>
   console.log(`Express app listening on port ${port}!`)
@@ -16,7 +27,7 @@ const html = `
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Hello from Render!</title>
+    <title>Welcome to FTP Beratung</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
       setTimeout(() => {
@@ -57,7 +68,7 @@ const html = `
   </head>
   <body>
     <section>
-      Hello from Render!
+      Hello from FTP Beratung!
     </section>
   </body>
 </html>
